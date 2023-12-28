@@ -21,7 +21,7 @@ BLOCKED_TEXTS = config("BLOCKED_TEXTS", default="", cast=lambda x: [i.strip().lo
 MEDIA_FORWARD_RESPONSE = config("MEDIA_FORWARD_RESPONSE", default="yes").lower()
 
 FROM = [int(i) for i in FROM_.split()]
-TO = [int(i) for i in TO_.split()]
+TO = [int(i) for i in TO_.split() if i.isdigit()]  # Filter out invalid values
 
 YOUR_ADMIN_USER_ID = config("YOUR_ADMIN_USER_ID", default=0, cast=int)
 BOT_API_KEY = config("BOT_API_KEY", default="", cast=str)
@@ -64,12 +64,12 @@ async def sender_bH(event):
 
 # Event handler for old messages
 async def forward_old_messages():
-    destination_channels = TO_  # Assuming TO contains a list of channel IDs
+    destination_channels = TO
     for channel_id in destination_channels:
         try:
             destination_channel = await steallootdealUser.get_entity(int(channel_id))
 
-            async for message in steallootdealUser.iter_messages(FROM):
+            async for message in steallootdealUser.iter_messages(FROM_):
                 message_text = message.raw_text.lower()
 
                 # Add your additional logic here, if needed
