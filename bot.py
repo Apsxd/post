@@ -76,7 +76,7 @@ print("Bot has started.")
 # Create an event loop and run the forward_old_messages function
 import asyncio
 loop = asyncio.get_event_loop()
-loop.run_until_complete(forward_old_messages()
+loop.run_until_complete(forward_old_messages())
 
 # Start the event loop for handling new messages
 steallootdealUser.run_until_disconnected()
