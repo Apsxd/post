@@ -64,7 +64,7 @@ async def sender_bH(event):
 
 # Event handler for old messages
 async def forward_old_messages():
-    destination_channels = TO  # Assuming TO contains a list of channel IDs
+    destination_channels = TO_  # Assuming TO contains a list of channel IDs
     for channel_id in destination_channels:
         try:
             destination_channel = await steallootdealUser.get_entity(int(channel_id))
