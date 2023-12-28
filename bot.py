@@ -67,7 +67,7 @@ async def forward_old_messages(client):
     # Call the print_entities function with the correct client instance
     await print_entities(client)
 
-    destination_channels = TO  # Assuming TO_ contains a comma-separated list of channel IDs
+    destination_channels = TO_  # Use TO_ instead of TO
     for channel_id in destination_channels.split(','):
         try:
             destination_channel = await client.get_entity(int(channel_id))
@@ -79,15 +79,6 @@ async def forward_old_messages(client):
             print(f"Error: {ve}. Check if the channel ID {channel_id} is correct.")
         except Exception as e:
             print(f"Error forwarding old messages to channel {channel_id}: {e}")
-
-# Modify the print_entities function to accept the client instance
-async def print_entities(client):
-    dialogs = await client.get_dialogs()
-    for dialog in dialogs:
-        print(f"{dialog.name}: {dialog.id}")
-
-# Run the bot
-print("Bot has started.")
 
 # Create an event loop and run the forward_old_messages function
 import asyncio
