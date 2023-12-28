@@ -2,7 +2,6 @@ from telethon import TelegramClient, events
 from decouple import config
 import logging
 from telethon.sessions import StringSession
-import os
 
 # Configure logging
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s', level=logging.WARNING)
@@ -31,11 +30,11 @@ except Exception as ap:
     print(f"ERROR - {ap}")
     exit(1)
 
-# Event handler for incoming messages
-@steallootdealUser.on(events.NewMessage(incoming=True, chats=FROM_CHANNEL))
 async def forward_messages(event):
-    for i in TO_CHANNEL.split(','):
+    for channel_id in TO_CHANNEL.split(','):
         try:
+            destination_channel = await steallootdealUser.get_entity(int(channel_id))
+
             message_text = event.raw_text.lower()
 
             if any(blocked_text in message_text for blocked_text in BLOCKED_TEXTS):
@@ -49,16 +48,29 @@ async def forward_messages(event):
                     print(f"Media forwarding skipped by user for message: {event.raw_text}")
                     continue
 
-                await steallootdealUser.send_message(i, message_text, file=event.media)
-                print(f"Forwarded media message to channel {i}")
+                await steallootdealUser.send_message(destination_channel, message_text, file=event.media)
+                print(f"Forwarded media message to channel {channel_id}")
 
             else:
-                await steallootdealUser.send_message(i, message_text)
-                print(f"Forwarded text message to channel {i}")
+                await steallootdealUser.send_message(destination_channel, message_text)
+                print(f"Forwarded text message to channel {channel_id}")
 
+        except ValueError as ve:
+            print(f"Error: {ve}. Check if the channel ID {channel_id} is correct.")
         except Exception as e:
-            print(f"Error forwarding message to channel {i}: {e}")
+            print(f"Error forwarding message to channel {channel_id}: {e}")
+
+# Event handler for incoming messages
+@steallootdealUser.on(events.NewMessage(incoming=True, chats=FROM_CHANNEL))
+async def handle_incoming_messages(event):
+    await forward_messages(event)
+
+# Event handler for old messages
+async def forward_old_messages():
+    async for message in steallootdealUser.get_messages(FROM_CHANNEL):
+        await forward_messages(message)
 
 # Run the bot
 print("Bot has started.")
+await forward_old_messages()  # Forward old messages first
 steallootdealUser.run_until_disconnected()
