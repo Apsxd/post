@@ -65,11 +65,11 @@ async def sender_bH(event):
 # Event handler for old messages
 async def forward_old_messages():
     destination_channels = TO  # Assuming TO_ contains a comma-separated list of channel IDs
-    for channel_id in destination_channels.split(','):
+    for channel_id in destination_channels:
         try:
             destination_channel = await steallootdealUser.get_entity(int(channel_id))
 
-            async for message in steallootdealUser.iter_messages(FROM_):
+            async for message in steallootdealUser.iter_messages(destination_channel):
                 await forward_messages(message, destination_channel)
 
         except ValueError as ve:
