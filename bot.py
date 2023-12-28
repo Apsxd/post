@@ -1,4 +1,3 @@
-
 from telethon import TelegramClient, events
 from decouple import config
 import logging
@@ -15,14 +14,11 @@ print("Starting...")
 APP_ID = config("APP_ID", default=0, cast=int)
 API_HASH = config("API_HASH", default=None, cast=str)
 SESSION = config("SESSION", default="", cast=str)
-FROM_ = config("FROM_CHANNEL", default="", cast=str)
-TO_ = config("TO_CHANNEL", default="", cast=str)
+FROM_CHANNEL = config("FROM_CHANNEL", default="", cast=str)
+TO_CHANNEL = config("TO_CHANNEL", default="", cast=str)
 
 BLOCKED_TEXTS = config("BLOCKED_TEXTS", default="", cast=lambda x: [i.strip().lower() for i in x.split(',')])
 MEDIA_FORWARD_RESPONSE = config("MEDIA_FORWARD_RESPONSE", default="yes").lower()
-
-FROM = [int(i) for i in FROM_.split()]
-TO = [int(i) for i in TO_.split()]
 
 YOUR_ADMIN_USER_ID = config("YOUR_ADMIN_USER_ID", default=0, cast=int)
 BOT_API_KEY = config("BOT_API_KEY", default="", cast=str)
@@ -36,9 +32,9 @@ except Exception as ap:
     exit(1)
 
 # Event handler for incoming messages
-@steallootdealUser.on(events.NewMessage(incoming=True, chats=FROM))
-async def sender_bH(event):
-    for i in TO:
+@steallootdealUser.on(events.NewMessage(incoming=True, chats=FROM_CHANNEL))
+async def forward_messages(event):
+    for i in TO_CHANNEL.split(','):
         try:
             message_text = event.raw_text.lower()
 
