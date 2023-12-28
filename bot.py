@@ -1,4 +1,4 @@
-from telethon import TelegramClient, events
+rom telethon import TelegramClient, events
 from decouple import config
 import logging
 from telethon.sessions import StringSession
@@ -64,8 +64,8 @@ async def sender_bH(event):
 
 # Event handler for old messages
 async def forward_old_messages(client):
-    # Call the print_entities function with the correct client instance
-    await print_entities(client)
+    # Call the correct function name: print_entities -> print_channel_names
+    await print_channel_names(client)
 
     destination_channels = TO_  # Use TO_ instead of TO
     for channel_id in destination_channels.split(','):
